@@ -1,0 +1,192 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<style>
+.audio-player {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    background-color: #f0f0f0;
+    padding: 20px;
+    border: 2px solid #ccc;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    max-width: 400px;
+    margin: 20px auto;
+}
+
+/* Сам плеер */
+.audio-player audio {
+    width: 100%;
+    margin-top: 10px;
+    outline: none;
+}
+
+/* Заголовок */
+.audio-player h3 {
+    margin: 0 0 10px;
+    font-size: 18px;
+    color: #333;
+    text-align: center;
+}
+
+/* Текст под плеером */
+.audio-player p {
+    margin: 10px 0 0;
+    font-size: 14px;
+    color: #666;
+    text-align: center;
+}
+</style>
+
+<body>
+    <section id="gameSection">
+        <h2>Угадай страну по городу</h2>
+        <div id="questionContainer">
+            <p id="cityName">Париж</p>
+            <img id="cityImage" src="paris_image.jpg" alt="Изображение Парижа" width="200">
+            <div id="options">
+                <button class="answerBtn" data-answer="Франция">Франция</button>
+                <button class="answerBtn" data-answer="Германия">Германия</button>
+                <button class="answerBtn" data-answer="Италия">Италия</button>
+                <button class="answerBtn" data-answer="Испания">Испания</button>
+            </div>
+    
+            <div id="resultMessage" style="display: none;">
+                <span id="resultIcon"></span> <span id="resultText"></span>
+            </div>
+        </div>
+    </section>
+    <audio controls>
+        <source src="mp3/6944116686-392050195.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
+    
+    <script>
+        let questions = [
+            {
+                city: "Париж",
+                image: "paris_image.jpg",
+                options: ["Франция", "Германия", "Италия", "Испания"],
+                answer: "Франция" // Убедитесь, что ответ правильный
+            }
+            // Можете добавить другие вопросы в массив
+        ];
+    
+        let currentQuestionIndex = 0; // Индекс текущего вопроса
+    
+        // Функция для показа текущего вопроса
+        function showQuestion() {
+            let question = questions[currentQuestionIndex];
+            document.getElementById('cityName').innerText = question.city;
+            document.getElementById('cityImage').src = question.image;
+    
+            // Заполнение вариантов ответов
+            let options = document.querySelectorAll('.answerBtn');
+            options.forEach((btn, index) => {
+                btn.innerText = question.options[index];
+                btn.style.backgroundColor = ''; // Убираем цвет с предыдущих кнопок
+            });
+    
+            // Скрываем результат, чтобы он не был виден на следующем вопросе
+            document.getElementById('resultMessage').style.display = 'none';
+        }
+    
+        // Обработка выбора ответа
+        document.querySelectorAll('.answerBtn').forEach((btn) => {
+            btn.addEventListener('click', (event) => {
+                let selectedAnswer = event.target.dataset.answer.trim(); // Убираем лишние пробелы
+                let correctAnswer = questions[currentQuestionIndex].answer.trim(); // Убираем лишние пробелы
+    
+                // Показать результат ответа
+                let resultIcon = document.getElementById('resultIcon');
+                let resultText = document.getElementById('resultText');
+    
+                // Проверка правильности ответа
+                if (selectedAnswer === correctAnswer) {
+                    resultIcon.innerText = '✓';  // Положительный смайлик
+                    resultText.innerText = 'Правильный ответ!';
+                    event.target.style.backgroundColor = 'green'; // Подсветка правильного ответа
+                } else {
+                    resultIcon.innerText = '✗';  // Отрицательный смайлик
+                    resultText.innerText = 'Неправильный ответ!';
+                    event.target.style.backgroundColor = 'red'; // Подсветка неправильного ответа
+                }
+    
+                document.getElementById('resultMessage').style.display = 'block';
+    
+                // Переход к следующему вопросу через 1 секунду
+                setTimeout(() => {
+                    currentQuestionIndex++;
+                    if (currentQuestionIndex < questions.length) {
+                        showQuestion();
+                    } else {
+                        alert('Тест завершен!');
+                    }
+                }, 1000);
+            });
+        });
+    
+        // Запуск игры
+        showQuestion();
+    </script>
+    
+</body>
+</html>
+@media (max-width: 768px) {
+    nav ul {
+        flex-direction: column; /* Меняем направление меню на колонку */
+        padding: 10px 0;
+        text-align: center; /* Центрируем текст */
+    }
+
+    nav li {
+        margin: 10px 0; /* Увеличиваем отступы между пунктами */
+    }
+
+    nav a {
+        font-size: 1.5em; /* Увеличиваем размер шрифта на мобильных устройствах */
+    }
+}
+/* Мобильное меню с бургер-иконкой */
+@media (max-width: 480px) {
+    nav ul {
+        display: none; /* Скрываем меню по умолчанию на маленьких экранах */
+    }
+
+    nav.active ul {
+        display: block; /* Показываем меню при активации */
+    }
+
+    nav .burger {
+        display: block; /* Показываем бургер-иконку */
+        cursor: pointer;
+        margin: 15px;
+    }
+
+    nav .burger div {
+        background-color: #fff;
+        height: 3px;
+        width: 25px;
+        margin: 5px 0;
+        transition: transform 0.3s ease;
+    }
+
+    nav.active .burger div:nth-child(1) {
+        transform: rotate(45deg) translateY(8px);
+    }
+
+    nav.active .burger div:nth-child(2) {
+        opacity: 0;
+    }
+
+    nav.active .burger div:nth-child(3) {
+        transform: rotate(-45deg) translateY(-8px);
+    }
+}
